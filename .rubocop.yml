@@ -1,0 +1,23 @@
+Style/FrozenStringLiteralComment:
+    Enabled: false
+
+AllCops:
+    Include:
+        - '**/Rakefile'
+        - '**/config.ru'
+    Exclude:
+        - 'bin/*'
+        - 'db/**/*'
+        - 'config/**/*'
+        - 'script/**/*'
+        - !ruby/regexp /old_and_unused\.rb$/
+    TargetRubyVersion: 2.4
+
+Rails:
+    Enabled: true
+
+Metrics/LineLength:
+    Max: 120
+
+Documentation:
+    Enabled: false

@@ -1,16 +1,16 @@
 # coding: utf-8
 source = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(source) unless $LOAD_PATH.include?(source)
-require 'Liber/version'
+require 'AssinaMe/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'liber'
-  spec.version       = Liber::VERSION
+  spec.name          = 'assiname'
+  spec.version       = AssinaMe::VERSION
   spec.authors       = ['Flavio Heleno']
   spec.email         = ['flavio@libercapital.com.br']
   spec.summary       = %q{Write a short summary. Required.}
   spec.description   = %q{Write a longer description. Optional.}
-  spec.homepage      = 'https://www.libercapital.com.br/'
+  spec.homepage      = 'https://www.assina.me/'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")

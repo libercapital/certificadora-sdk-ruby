@@ -2,14 +2,14 @@ require 'uri'
 require 'rest_client'
 require 'multi_json'
 
-module Liber
+module AssinaMe
   class SDK
     attr_reader :base_url
 
     def initialize(apikey, base_url = nil)
       @apikey = apikey
 
-      @base_url = 'https://api.cert.libercapital.com.br/v1'
+      @base_url = 'https://api.assina.me/v1'
 
       @base_url = base_url unless base_url.nil?
     end
@@ -27,9 +27,9 @@ module Liber
         setup
       )
 
-      raise(Liber::SDKException, 'Invalid API response format') if !response.is_a?(Hash)
+      raise(AssinaMe::SDKException, 'Invalid API response format') if !response.is_a?(Hash)
 
-      raise(Liber::SDKException, 'API response does not contain "document_token"') if response['document_token'].to_s.empty?
+      raise(AssinaMe::SDKException, 'API response does not contain "document_token"') if response['document_token'].to_s.empty?
 
       response['document_token']
     end
@@ -43,7 +43,7 @@ module Liber
         { 'Content-Type': 'application/pdf' }
       )
 
-      raise(Liber::SDKException, 'Invalid API response format') if !response.is_a?(Hash)
+      raise(AssinaMe::SDKException, 'Invalid API response format') if !response.is_a?(Hash)
     end
 
     def pdf_create(setup, original_file_path)
@@ -56,15 +56,19 @@ module Liber
     def pdf_status(document_token)
       response = send_get('/pdf/' + document_token)
 
-      raise(Liber::SDKException, 'Invalid API response format') if !response.is_a?(Hash)
+      raise(AssinaMe::SDKException, 'Invalid API response format') if !response.is_a?(Hash)
 
       response
     end
 
     def pdf_download(document_token, signed_file_path)
-      response = send_get("/pdf/#{document_token}/file")
+      response = send_get(
+        "/pdf/#{document_token}/file",
+        nil,
+        { 'Accept': 'application/pdf' }
+      )
 
-      raise(Liber::SDKException, 'Invalid API response') if response.empty?
+      raise(AssinaMe::SDKException, 'Invalid API response') if response.empty?
 
       open(signed_file_path, 'w:ASCII-8BIT') do |file|
         file.puts(response)
@@ -125,7 +129,7 @@ module Liber
           headers: default_headers
         )
       rescue RestClient::Exception => exception
-        raise(Liber::SDKError, exception.message)
+        raise(AssinaMe::SDKError, exception.message)
       end
 
       if response.headers.key?(:content_type)
@@ -135,17 +139,17 @@ module Liber
           begin
             json = MultiJson.load(response.body)
           rescue MultiJson::DecodeError
-            raise(Liber::SDKException, 'Invalid API response format')
+            raise(AssinaMe::SDKException, 'Invalid API response format')
           end
 
           if json['status'].to_s.empty? || json['status'].to_s == 'false'
-            raise(Liber::SDKException, json['reason']) if !json['reason'].to_s.empty?
+            raise(AssinaMe::SDKException, json['reason']) if !json['reason'].to_s.empty?
 
-            raise(Liber::SDKException, json['message']) if !json['message'].to_s.empty?
+            raise(AssinaMe::SDKException, json['message']) if !json['message'].to_s.empty?
 
-            raise(Liber::SDKException, 'Unknown SDK exception') if json['exception'].to_s.empty?
+            raise(AssinaMe::SDKException, 'Unknown SDK exception') if json['exception'].to_s.empty?
 
-            raise(Liber::SDKException, json['exception'])
+            raise(AssinaMe::SDKException, json['exception'])
           end
 
           return json

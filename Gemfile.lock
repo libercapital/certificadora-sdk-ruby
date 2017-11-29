@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    liber (0.1.0)
+    assiname (0.1.0)
       multi_json (~> 1.12)
       rest-client (~> 2.0)
 
@@ -30,8 +30,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  assiname!
   bundler (~> 1.7)
-  liber!
   rake (~> 10.0)
 
 BUNDLED WITH

@@ -75,6 +75,16 @@ module AssinaMe
       end
     end
 
+    def pdf_details(document_token)
+      response = send_get("/pdf/#{document_token}/details")
+
+      raise(AssinaMe::SDKException, 'Invalid API response format') if !response.is_a?(Hash)
+
+      raise(AssinaMe::SDKException, 'API response does not contain "signatures"') if response['signatures'].to_s.empty?
+
+      response['signatures']
+    end
+
     private
 
     def send_get(uri, query = nil, headers = nil)
